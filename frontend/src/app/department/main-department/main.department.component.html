@@ -1,0 +1,37 @@
+<div class="container">
+  <h3>add new department</h3>
+
+  <form novalidate [formGroup]="departmentForm" (ngSubmit)="save(departmentForm)">
+
+    <div class="form-group">
+      <label for="name">department name</label>
+      <input id="name" type="text" class="form-control"
+             formControlName="name" placeholder="department name"/>
+      <div *ngIf="departmentForm.get('name').dirty && departmentForm.get('name').invalid" class="alert alert-danger">
+        {{ formErrors.name }}
+      </div>
+    </div>
+    <button type="submit" class="btn btn-default" [disabled]="!departmentForm.valid">Submit</button>
+    <button type="button" class="btn btn-default" (click)="cancel()" >Cancel</button>
+  </form>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>department name</th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let dep of departments">
+      <td>{{ dep.name}}</td>
+      <td>
+        <button class="btn btn-primary" (click)="loadDepartment(dep)">edit</button>
+      </td>
+      <td>
+        <button class="btn btn-primary" (click)="delete(dep.id)">delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

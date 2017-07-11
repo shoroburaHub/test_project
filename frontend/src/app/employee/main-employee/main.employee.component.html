@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+    <form novalidate [formGroup]="employeeForm" (ngSubmit)="save(employeeForm)">
+
+      <div class="form-group">
+        <label for="name">employee name</label>
+        <input id="name" type="text" class="form-control" formControlName="name"
+               name="name" placeholder="employee name"/>
+        <div *ngIf="employeeForm.get('name').dirty && employeeForm.get('name').invalid" class="alert alert-danger">
+          {{ formErrors.name }}
+        </div>
+        <label for="active">is active</label>
+
+        <input formControlName="active" id="active" type="checkbox" name="name" placeholder="employee active"/>
+        <select formControlName="department" name="department" >
+          <option [selected]="'none'" *ngFor="let department of departments" [ngValue]="department" [selected]="department.id === employeeForm.value.department.id" >{{department.name}}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-default" [disabled]="!employeeForm.valid">Submit</button>
+      <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+    </form>
+    </div>
+  </div>
+  <ul class="pagination">
+    <li [class.disabled]="page.currentPage == 1"><a  (click)="onPageChange(1)"> << </a></li>
+    <li  [class.disabled]="page.currentPage == 1"><a  (click)="onPageChange(page.currentPage - 1)"> < </a></li>
+    <li *ngFor="let p of pages"  [class.active]="page.currentPage == p"><a  (click)="onPageChange(p)">{{p}}</a></li>
+    <li [class.disabled]="page.currentPage == page.count"><a  (click)="onPageChange(page.currentPage + 1)"> > </a></li>
+    <li [class.disabled]="page.currentPage == page.count"><a (click)="onPageChange(page.count)"> >> </a></li>
+  </ul>
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>
+        <label for="employeeNameSearch">Employee Name</label>
+        <input [(ngModel)]="page.search" (keyup)="refresh()" type="text" class="form-control" placeholder="search" size="5" id="employeeNameSearch"/>
+      </th>
+      <th>
+      </th>
+      <th>employee id</th>
+      <th>employee name</th>
+      <th>employee active</th>
+      <th>department name</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let empl of employees">
+      <td>
+        <p><a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('lightView').style.display='block';document.getElementById('fadeView').style.display='block'">view</a>
+        </p>
+        <div id="lightView" class="white_content">
+          <p><b>employee name</b>  : {{ empl.name }}</p>
+          <p><b>employee is active</b> : {{ empl.active }}</p>
+          <p><b>department</b> : {{ empl.department.name }}</p>
+          <a  class="btn btn-primary reset" href="javascript:void(0)" onclick="document.getElementById('lightView').style.display='none';document.getElementById('fadeView').style.display='none'">close</a>
+        </div>
+        <div id="fadeView" class="black_overlay"></div>
+      </td>
+      <td>
+        <button class="btn btn-primary" (click)="loadEmployee(empl)">edit</button>
+      </td>
+      <td>{{ empl.id }}</td>
+      <td>{{ empl.name }}</td>
+      <td>{{ empl.active }}</td>
+      <td>{{ empl.department.name}}</td>
+      <td>
+        <button class="btn btn-primary" (click)="deleteEmployee(empl.id)">delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li [class.disabled]="page.currentPage == 1"><a (click)="onPageChange(1)"> << </a></li>
+    <li  [class.disabled]="page.currentPage == 1"><a  (click)="onPageChange(page.currentPage - 1)"> < </a></li>
+    <li *ngFor="let p of pages"  [class.active]="page.currentPage == p"><a  (click)="onPageChange(p)">{{p}}</a></li>
+    <li [class.disabled]="page.currentPage == page.count"><a  (click)="onPageChange(page.currentPage + 1)"> > </a></li>
+    <li [class.disabled]="page.currentPage == page.count"><a (click)="onPageChange(page.count)"> >> </a></li>
+  </ul>
+
+</div>
+
+
